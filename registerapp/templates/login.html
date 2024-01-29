@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+    {% block hero_txt %}
+
+    <h1>INTRALOG METRICS<span>.</span></h1>
+    <h2>Logueate para continuar</h2>
+
+        <form action="{% url 'login' %}" method="post" class="get-started-btn scrollto">
+            {% csrf_token %}
+
+            {{formulario1.as_p}}
+
+            <button type="submit"> LogIn </button>
+        </form>
+
+    {% endblock hero_txt %}
+
+{% block main_body %}
+{% endblock main_body %}

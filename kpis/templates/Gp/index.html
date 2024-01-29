@@ -40,6 +40,7 @@
 <body>
   <main id="main"></main>
 
+
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top ">
     <div class="container d-flex align-items-center justify-content-lg-between">
@@ -76,7 +77,7 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-      <a href="#about" class="get-started-btn scrollto">Log in</a>
+      <a href="{% url 'login' %}" class="get-started-btn scrollto">Log in</a>
 
     </div>
   </header><!-- End Header -->
@@ -87,14 +88,55 @@
 
       <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
         <div class="col-xl-6 col-lg-8">
+          {% block hero_txt %}
           <h1>INTRALOG METRICS<span>.</span></h1>
           <h2>Bienvenido al portal de metricas y estadistica<br>de Intralog. S.A.</h2>
+          {% endblock hero_txt %}
         </div>
       </div>
+
+      {% if user.is_authenticated %}
+
+      <div class="row gy-4 mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <i class="ri-store-line"></i>
+            <h3><a href="">Entregas</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <i class="ri-bar-chart-box-line"></i>
+            <h3><a href="">Patrones</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <i class="ri-calendar-todo-line"></i>
+            <h3><a href="">fechas relevantes</a></h3>
+          </div>
+        </div>
+        <!-- <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <i class="ri-paint-brush-line"></i>
+            <h3><a href="">otro kpi</a></h3>
+          </div>
+        </div> -->
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <i class="ri-database-2-line"></i>
+            <h3><a href="">WH</a></h3>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
 
       
     </div>
   </section><!-- End Hero -->
+
+  {% block main_body %}
 
   <!-- ======= About Section ======= -->
   <section id="about" class="about">
@@ -123,7 +165,7 @@
     </div>
   </section><!-- End About Section -->
 
-  
+  {% endblock main_body %}
 
   </main><!-- End #main -->
 
@@ -138,7 +180,7 @@
               <h3>Intralog S<span>.</span>A<span>.</span></h3>
               <p>
                 Santiago del estero 804 <br>
-                NY 535022, USA<br><br>
+                Buenos Aires, Argentina<br><br>
                 <strong>Telefono:</strong> +54 0348 462-4718<br>
                 <strong>Email:</strong> info@intralog.com.ar<br>
               </p>
