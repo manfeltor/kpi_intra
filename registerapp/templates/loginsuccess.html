@@ -1,17 +1,19 @@
 {% extends 'index.html' %}
 
-{% block main_body %}
-
 <div>
+    {% block hero_txt %}
     {% if msg != "1" %}
 
-        <h2>La autenticacion fallo, parece que los datos son incorrectos o no coinciden con ningun usuario en las bases. seras redireccionado de nuevo al formulario de loguin en instantes</h2>
+        <h1>La autenticacion fallo<span>.</span></h1>
+        <h2>parece que los datos son incorrectos o no coinciden con ningun usuario en las bases. seras redireccionado de nuevo al formulario de loguin en instantes</h2>
 
     {% else %}
 
-        <h2>Bienvenido {{usr}}!!!, seras redireccionado a la pagina de inicio en instantes</h2>
+        <h1>Bienvenido {{usr}}!!!<span>.</span></h1>
+        <h2>seras redireccionado a la pagina de inicio en instantes</h2>
         
     {% endif %}
+    
 </div>
 
     {% if msg == "1" %}
@@ -27,9 +29,12 @@
     <script>
         setTimeout(function() {
                 window.location.href = "{% url 'login' %}";
-        }, 3500); // 5000 milliseconds = 5 seconds
+        }, 4500); // 5000 milliseconds = 5 seconds
     </script>
 
     {% endif %}
-            
+    {% endblock hero_txt %}
+    {% block hero_panel %}
+    {% endblock hero_panel %}
+{% block main_body %}
 {% endblock main_body %}
