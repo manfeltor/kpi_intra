@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'start',
-    'registerapp'
+    'registerapp',
+    'entregasapp',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'kpis.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'kpis', 'templates', 'Gp')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates', 'Gp')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +128,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'appinfo/templates/static'),
-    os.path.join(BASE_DIR, r'kpis\templates\Gp\assets'),
-    # os.path.join(BASE_DIR, r'media'),
-    
+    os.path.join(BASE_DIR, r'templates\Gp\assets'),
+    # os.path.join(BASE_DIR, r'media'),    
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'templates')
+
+# LOGIN_URL = 'unauthlog'
+
+# MEDIA_URL = '/assets/'
+MEDIA_ROOT = BASE_DIR / "assets"
