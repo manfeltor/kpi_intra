@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import pandas as pd
 import os
+import glob
 
 # Create your views here.
 
@@ -12,10 +13,16 @@ def render_main(req):
 
 #db
 
-def importar_excel_tms() -> pd.DataFrame:
+def importar_excel_tms(folder_path) -> pd.DataFrame:
 
-    folder_path = ''
+    excel_files = glob.glob(folder_path)
+    df_inc = []
+    for file in excel_files:
+        df = pd.read_excel(file)
+        df_inc.append(df)
 
-    file_names = os.listdir(folder_path)
-    
-    return baselimpia
+    bdfin = pd.concat(df_inc, ignore_index=True)
+    bdfin = bdfin.drop_duplicates(subset='lpn')
+
+    return bdfin
+

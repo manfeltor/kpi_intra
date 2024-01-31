@@ -4,7 +4,7 @@ from django.db import models
 
 from django.db import models
 
-class Pedido(models.Model):
+class bdoms(models.Model):
 
     pedido = models.CharField(max_length=50, null=True)
     flujo = models.CharField(max_length=2, null=True)
@@ -21,10 +21,10 @@ class Pedido(models.Model):
     fechaRecepcion = models.DateTimeField(null=True)
     fechaDespacho = models.DateTimeField(null=True)
     fechaEntrega = models.DateTimeField(null=True)
-    diffMmConfirmacionCreacion = models.CharField(null=True)
-    diffMmConfirmacionColecta = models.CharField(null=True)
-    diffMmColectaEntrega = models.CharField(null=True)
-    diffMmCreacionEntrega = models.CharField(null=True)
+    diffMmConfirmacionCreacion = models.CharField(max_length=20, null=True)
+    diffMmConfirmacionColecta = models.CharField(max_length=20, null=True)
+    diffMmColectaEntrega = models.CharField(max_length=20, null=True)
+    diffMmCreacionEntrega = models.CharField(max_length=20, null=True)
     remito = models.CharField(max_length=50, null=True)
     ruta = models.CharField(max_length=50, null=True)
     orden = models.CharField(max_length=5, null=True)
@@ -39,7 +39,7 @@ class Pedido(models.Model):
     ancho = models.FloatField(null=True)
     largo = models.FloatField(null=True)
     peso = models.FloatField(null=True)
-    valorDeclarado = models.CharField(null=True)
+    valorDeclarado = models.CharField(max_length=10, null=True)
     almacen = models.CharField(max_length=50, null=True)
     ubicacion = models.CharField(max_length=20, null=True)
     fechaGuardado = models.DateTimeField(null=True)
