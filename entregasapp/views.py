@@ -41,7 +41,7 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
     bdfin[integer_columns] = bdfin[integer_columns].apply(pd.to_numeric, downcast='integer', errors='coerce')
 
     bdfin.replace({pd.NaT: None, np.nan: None}, inplace=True)
-
+    bdfin.replace('nan', None)
 
     # bdfin = bdfin.rename(columns=lambda x: x.replace('.', 'x'))
     # print(type(bdfin))
