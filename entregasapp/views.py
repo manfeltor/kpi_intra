@@ -15,7 +15,8 @@ def render_main(req):
 #db
 
 def importar_excel_tms(folder_path) -> pd.DataFrame:
-    
+
+    date_columns = ['fechaCreacion', 'fechaColecta', 'fechaRecepcion', 'fechaDespacho', 'fechaEntrega']
 
     excel_files = glob.glob(folder_path)
     df_inc = []
@@ -28,8 +29,18 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
     bdfin = bdfin.drop_duplicates(subset=['lpn'])
     bdfin = bdfin.drop('fechaRecepcion.1', axis=1)
 
-    date_columns = ['fechaCreacion', 'fechaPactada', 'fechaConfirmacion', 'fechaColecta', 'fechaRecepcion', 'fechaDespacho', 'fechaEntrega', 'fechaGuardado']
-    bdfin[date_columns] = bdfin[date_columns].apply(pd.to_datetime, errors='coerce', utc=True)
+    # date_columns = ['fechaCreacion', 'fechaPactada', 'fechaConfirmacion', 'fechaColecta', 'fechaRecepcion', 'fechaDespacho', 'fechaEntrega', 'fechaGuardado']
+    
+    # conversion to time format
+
+    for column in date_columns:
+        bdfin[column] = bdfin[column].str[:10]
+        # print(bdfin[column])
+    bdfin[date_columns] = pd.to_datetime(bdfin[date_columns])
+
+
+    # date_formats = ['%d/%m/%Y %H:%M:%S', '%d/%m/%YT %H:%M:%S']
+    # bdfin[date_columns] = bdfin[date_columns].apply(pd.to_datetime, errors='coerce', utc=True, format=date_formats)
     # bdfin[date_columns] = pd.to_datetime(bdfin[date_columns], utc=True)
 
     numeric_columns = ['diffMmConfirmacionCreacion', 'diffMmConfirmacionColecta', 'diffMmColectaEntrega', 'diffMmCreacionEntrega',
@@ -47,4 +58,3 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
     # print(type(bdfin))
 
     return bdfin
-
