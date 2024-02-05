@@ -4,6 +4,20 @@ from django.db import models
 
 from django.db import models
 
+class cpPais(models.Model):
+    CP = models.CharField(max_length=10, primary_key=True)
+    Localidad = models.CharField(max_length=100)
+    Partido = models.CharField(max_length=100)
+    Provincia = models.CharField(max_length=100)
+    REGION = models.CharField(max_length=100)
+    DISTRITO = models.CharField(max_length=100)
+    ZONA = models.CharField(max_length=100)
+    AMBA_INTRALOG = models.CharField(max_length=100)
+    ZONA_FLEX = models.CharField(max_length=100)
+    FLEX_INTRA = models.CharField(max_length=100)
+    RANGO_CP = models.CharField(max_length=100)
+    CPA = models.CharField(max_length=100)
+
 class bdoms(models.Model):
 
     pedido = models.CharField(max_length=50, null=True)
@@ -68,7 +82,7 @@ class bdoms(models.Model):
     # longitud = models.CharField(max_length=50, null=True)
     # m3 = models.FloatField(null=True)
     # mail = models.EmailField(max_length=50, null=True)
-    codigoPostal = models.CharField(max_length=5, null=True)
+    codigoPostal = models.ForeignKey(cpPais, on_delete=models.CASCADE)
     tte = models.CharField(max_length=50, null=True)
     # tteDireccion = models.CharField(max_length=200, null=True)
     # tteProvincia = models.CharField(max_length=20, null=True)
@@ -87,3 +101,4 @@ class bdoms(models.Model):
     # pesoAforado = models.CharField(max_length=7, null=True)
     # express = models.CharField(max_length=50, null=True)
     # repartidor = models.CharField(max_length=50, null=True)
+
