@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import glob
 import numpy as np
+from .models import cpPais
 
 # Create your views here.
 
@@ -42,6 +43,13 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
 
     for column in date_columns:
         df[column] = pd.to_datetime(df[column])
+
+    df['codigoPostal'] = df['codigoPostal'].astype(object)
+
+    for index, row in df.iterrows():
+        cp_value = row['codigoPostal']  # Assuming this is the CP value as a string
+        cp_instance = cpPais.objects.get(CP=cp_value)
+        df.at[index, 'codigoPostal'] = cp_instance
 
     bdfin = df
 
@@ -86,6 +94,8 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
     for column in date_columns:
         print(column)
         bdfin[column] = pd.to_datetime(bdfin[column])
+
+    
 
 
     bdfin.replace({pd.NaT: None, np.nan: None}, inplace=True)
