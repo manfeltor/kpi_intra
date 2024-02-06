@@ -16,4 +16,15 @@
 {% endblock hero_txt %}
 
 {% block main_body %}
+    
+    <h2>Promedio por provincias</h2>
+    <div class="table-styled table-container" data-aos="fade-left" data-aos-delay="100">
+        {{ mean_table | safe }}
+    </div>
+
+    <h2>Moda por provincias</h2>
+    <div class="table-styled table-container" data-aos="fade-left" data-aos-delay="100">
+        {{ mode_table | safe }}
+    </div>
+
 {% endblock main_body %}

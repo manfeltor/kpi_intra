@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-from django.db import models
-
 class cpPais(models.Model):
     CP = models.CharField(max_length=10, primary_key=True)
     Localidad = models.CharField(max_length=100)
@@ -17,6 +15,7 @@ class cpPais(models.Model):
     FLEX_INTRA = models.CharField(max_length=100)
     RANGO_CP = models.CharField(max_length=100)
     CPA = models.CharField(max_length=100)
+
 
 class bdoms(models.Model):
 
@@ -65,7 +64,7 @@ class bdoms(models.Model):
     # telefono = models.CharField(max_length=50, null=True)
     # provincia = models.CharField(max_length=50, null=True)
     # localidad = models.CharField(max_length=50, null=True)
-    # zona = models.CharField(max_length=10, null=True)
+    zona = models.CharField(max_length=10, null=True)
     # transporte = models.CharField(max_length=50, null=True)
     # observaciones = models.CharField(max_length=200, null=True)
     # trackingColecta = models.CharField(max_length=50, null=True)
