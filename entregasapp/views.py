@@ -17,6 +17,8 @@ import numpy as np
 
 def render_main(req):
 
+    
+
     A = calculate_date_diff("fechaDespacho", "fechaEntrega", "CHEEKY", "INTERIOR", "DIST")
     B = mode_group_date_diff(A, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
     html_mode_table = B.to_html(index=False)
