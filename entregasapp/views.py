@@ -81,7 +81,7 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
 
     return bdfin
 
-def calculate_date_diff(col1, col2, seller=None, zona=None, tipo=None):
+def calculate_date_diff(col1, col2, seller=None, zona=None, tipo=None, start_date=None, end_date=None):
 
         filter_conditions = Q()
 
@@ -91,6 +91,8 @@ def calculate_date_diff(col1, col2, seller=None, zona=None, tipo=None):
             filter_conditions &= Q(zona=zona)
         if tipo:
             filter_conditions &= Q(tipo=tipo)
+        if start_date and end_date:
+            filter_conditions &= Q(fechaDespacho__gte=start_date, fechaDespacho__lte=end_date)
 
         query_result = bdoms.objects.filter(filter_conditions).values(col1, col2, 'codigoPostal__Provincia')
         df = pd.DataFrame.from_records(query_result)
