@@ -17,7 +17,7 @@ class cpPais(models.Model):
     CPA = models.CharField(max_length=100)
 
 
-class bdoms(models.Model):
+class  bdoms(models.Model):
 
     pedido = models.CharField(max_length=50, null=True)
     flujo = models.CharField(max_length=2, null=True)
