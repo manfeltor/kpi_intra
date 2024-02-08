@@ -16,6 +16,12 @@
 {% endblock hero_txt %}
 
 {% block main_body %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Apply</button>
+    </form>
     
     <h2>Promedio por provincias</h2>
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
