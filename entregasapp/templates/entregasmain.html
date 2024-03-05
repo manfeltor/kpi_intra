@@ -20,14 +20,10 @@
     <form method="post">
         {% csrf_token %}
         {{ dates_form.as_p }}
-        <button type="submit">Apply</button>
-    </form>
-    <form method="post">
-        {% csrf_token %}
         {{ delivery_form.as_p }}
         <button type="submit">Apply</button>
     </form>
-    
+        
     <h2>Promedio por provincias</h2>
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
         {{ mean_table | safe }}
