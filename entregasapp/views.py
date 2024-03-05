@@ -23,27 +23,28 @@ def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, unti
     context = {'mode_table': html_mode_table, 'mean_table': html_mean_table}
     return context
 
-def fecth_entregas_forms_data(form):
+def fecth_entregas_forms_data(form_dates):
 
-    from_date_form = form.cleaned_data['start_date']
-    until_date_form = form.cleaned_data['end_date']
-    
+    from_date_form = form_dates.cleaned_data['start_date']
+    until_date_form = form_dates.cleaned_data['end_date']
 
 def render_main_despacho_vs_entrega(request):
     if request.method == 'POST':
-        form = DateRangeForm(request.POST)
-        if form.is_valid():
+        form_dates = DateRangeForm(request.POST)
+        form_filters = DeliveryTypesForm(request.POST)
+        if form_dates.is_valid():
             user_profile = UserProfile.objects.get(user=request.user)
-            from_date_form = form.cleaned_data['start_date']
-            until_date_form = form.cleaned_data['end_date']
-            
+            from_date_form = form_dates.cleaned_data['start_date']
+            until_date_form = form_dates.cleaned_data['end_date']
+            amba_filter = form_filters.cleaned_data['AMBA']
+            interior_filter = form_filters.cleaned_data['INTERIOR']         
             context = generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form)
-            context['form'] = form
+            context['form'] = form_dates
 
             return render(request, "entregasmain.html", context)
     else:
         dates_form = DateRangeForm()
-        delivery_form = DeliveryTypesForm()        
+        delivery_form = DeliveryTypesForm()
 
     return render(request, "entregasmain.html", {'dates_form': dates_form, 'delivery_form' : delivery_form})
 #db
