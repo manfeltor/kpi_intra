@@ -4,42 +4,48 @@ import numpy as np
 from .models import cpPais, bdoms
 from django.db.models import Q
 import numpy as np
-from .forms import DateRangeForm
+from .forms import DateRangeForm, DeliveryTypesForm
+from registerapp.models import UserProfile
 
 # Create your views here.
 
-# render
+def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form):
+    company = user_profile.company
 
-# def filtered_date_columns(req):
+    base_df = calculate_date_diff(first_date_column="fechaDespacho", last_date_column="fechaEntrega", zona="INTERIOR", tipo="DIST", seller=company.nombre, from_date_filter=from_date_form, until_date_filter=until_date_form)
 
-#     columns = 
+    mode_table = mode_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
+    html_mode_table = mode_table.to_html(index=False)
 
-#     return columns
+    mean_table = mean_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
+    html_mean_table = mean_table.to_html(index=False)
 
-def render_main(request):
+    context = {'mode_table': html_mode_table, 'mean_table': html_mean_table}
+    return context
+
+def fecth_entregas_forms_data(form):
+
+    from_date_form = form.cleaned_data['start_date']
+    until_date_form = form.cleaned_data['end_date']
+    
+
+def render_main_despacho_vs_entrega(request):
     if request.method == 'POST':
         form = DateRangeForm(request.POST)
         if form.is_valid():
-            # Extract start_date and end_date from the form
-            start_date = form.cleaned_data['start_date']
-            end_date = form.cleaned_data['end_date']
-            # Call calculate_date_diff with the date range
-            A = calculate_date_diff("fechaDespacho", "fechaEntrega", "CHEEKY", "INTERIOR", "DIST", start_date=start_date, end_date=end_date)
-            # Process the data as usual
-            B = mode_group_date_diff(A, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
-            html_mode_table = B.to_html(index=False)
-            C = mean_group_date_diff(A, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
-            html_mean_table = C.to_html(index=False)
-            context = {'mode_table': html_mode_table, 'mean_table': html_mean_table, 'form': form}
-
-            # calculate_days_between_first_and_last_reception("pedido", "fechaRecepcion")
+            user_profile = UserProfile.objects.get(user=request.user)
+            from_date_form = form.cleaned_data['start_date']
+            until_date_form = form.cleaned_data['end_date']
+            
+            context = generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form)
+            context['form'] = form
 
             return render(request, "entregasmain.html", context)
     else:
-        # If it's a GET request or form is invalid, render the form with empty data
-        form = DateRangeForm()
+        dates_form = DateRangeForm()
+        delivery_form = DeliveryTypesForm()        
 
-    return render(request, "entregasmain.html", {'form': form})
+    return render(request, "entregasmain.html", {'dates_form': dates_form, 'delivery_form' : delivery_form})
 #db
 
 import pandas as pd
@@ -132,7 +138,7 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
 
     return bdfin
 
-def calculate_date_diff(col1, col2, seller=None, zona=None, tipo=None, start_date=None, end_date=None):
+def calculate_date_diff(first_date_column, last_date_column, seller=None, zona=None, tipo=None, from_date_filter=None, until_date_filter=None):
 
         filter_conditions = Q()
 
@@ -142,15 +148,15 @@ def calculate_date_diff(col1, col2, seller=None, zona=None, tipo=None, start_dat
             filter_conditions &= Q(zona=zona)
         if tipo:
             filter_conditions &= Q(tipo=tipo)
-        if start_date and end_date:
-            filter_conditions &= Q(fechaDespacho__gte=start_date, fechaDespacho__lte=end_date)
+        if from_date_filter and until_date_filter:
+            filter_conditions &= Q(fechaDespacho__gte=from_date_filter, fechaDespacho__lte=until_date_filter)
 
-        query_result = bdoms.objects.filter(filter_conditions).values(col1, col2, 'codigoPostal__Provincia')
+        query_result = bdoms.objects.filter(filter_conditions).values(first_date_column, last_date_column, 'codigoPostal__Provincia')
         df = pd.DataFrame.from_records(query_result)
         df = df.dropna()
-        df['date_difference'] = (df[col2] - df[col1]).dt.days
-        A = [d.date() for d in df[col1]]
-        B = [d.date() for d in df[col2]]
+        df['date_difference'] = (df[last_date_column] - df[first_date_column]).dt.days
+        A = [d.date() for d in df[first_date_column]]
+        B = [d.date() for d in df[last_date_column]]
         df['bdDate_difference'] = np.busday_count(A, B)
         df = df[df['date_difference'] > 0]
         df = df[df['date_difference'] <= df['date_difference'].quantile(0.985)]

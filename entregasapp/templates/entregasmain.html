@@ -19,7 +19,12 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ dates_form.as_p }}
+        <button type="submit">Apply</button>
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        {{ delivery_form.as_p }}
         <button type="submit">Apply</button>
     </form>
     
