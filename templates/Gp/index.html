@@ -81,9 +81,18 @@
       </nav><!-- .navbar -->
 
       {% if request.user.is_authenticated %}
-      <a href="#" class="get-started-btn scrollto" onclick="confirmLogout()">Log out</a>
+      <!-- <a href="#" class="get-started-btn scrollto" onclick="confirmLogout()">
+        {% csrf_token %}
+        Log out
+      </a> -->
+      
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="get-started-btn scrollto" onclick="confirmLogout()">
+          <span style="color:darkslategray;">Log out</span></button>
+      </form>
       {% else %}
-      <a href="{% url 'login' %}" class="get-started-btn scrollto" >Log in</a>
+      <a href="{% url 'login' %}" class="get-started-btn scrollto">Log in</a>
       {% endif %}
 
     </div>
