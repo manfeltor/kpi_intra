@@ -23,22 +23,36 @@ def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, unti
     context = {'mode_table': html_mode_table, 'mean_table': html_mean_table}
     return context
 
-def fecth_entregas_forms_data(form_dates):
-
+def fetch_entregas_forms_data(form_dates, form_filters):
+    
     from_date_form = form_dates.cleaned_data['start_date']
     until_date_form = form_dates.cleaned_data['end_date']
+    # Extracting the values of AMBA and INTERIOR checkboxes
+    amba_checked = form_filters.cleaned_data['AMBA']
+    interior_checked = form_filters.cleaned_data['INTERIOR']
+    # Determine the values for amba_filter and interior_filter based on checkbox values
+    if amba_checked and not interior_checked: 
+        amba_filter = True
+        interior_filter = False
+    elif not amba_checked and interior_checked:
+        amba_filter = False
+        interior_filter = True
+    else:
+        amba_filter = False
+        interior_filter = False
+
+    cleaned_data = {"from_date":from_date_form, "to_date":until_date_form, "amba_filter":amba_filter, "interior_filter":interior_filter}
+
+    return cleaned_data
 
 def render_main_despacho_vs_entrega(request):
     if request.method == 'POST':
         form_dates = DateRangeForm(request.POST)
         form_filters = DeliveryTypesForm(request.POST)
-        if form_dates.is_valid():
+        if form_dates.is_valid() and form_filters.is_valid():
             user_profile = UserProfile.objects.get(user=request.user)
-            from_date_form = form_dates.cleaned_data['start_date']
-            until_date_form = form_dates.cleaned_data['end_date']
-            # amba_filter = form_filters.cleaned_data['AMBA']
-            # interior_filter = form_filters.cleaned_data['INTERIOR']         
-            context = generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form)
+            forms_data = fetch_entregas_forms_data(form_dates, form_filters)
+            context = generate_main_despacho_vs_entrega_context(user_profile, forms_data["from_date"], forms_data["to_date"])
             context['form'] = form_dates
 
             return render(request, "entregasmain.html", context)
