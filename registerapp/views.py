@@ -32,3 +32,7 @@ def login1(req):
         formulario1 = AuthenticationForm()
 
         return render(req, "login.html", {"formulario1": formulario1})
+    
+# def logout(req):
+
+#     return render(req, "logout.html")

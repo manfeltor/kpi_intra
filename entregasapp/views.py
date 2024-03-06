@@ -36,8 +36,8 @@ def render_main_despacho_vs_entrega(request):
             user_profile = UserProfile.objects.get(user=request.user)
             from_date_form = form_dates.cleaned_data['start_date']
             until_date_form = form_dates.cleaned_data['end_date']
-            amba_filter = form_filters.cleaned_data['AMBA']
-            interior_filter = form_filters.cleaned_data['INTERIOR']         
+            # amba_filter = form_filters.cleaned_data['AMBA']
+            # interior_filter = form_filters.cleaned_data['INTERIOR']         
             context = generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form)
             context['form'] = form_dates
 
