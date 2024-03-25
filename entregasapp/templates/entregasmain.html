@@ -17,13 +17,16 @@
 
 {% block main_body %}
 
+{% if request.method == 'GET' %}
     <form method="post">
         {% csrf_token %}
         {{ dates_form.as_p }}
         {{ delivery_form.as_p }}
         <button type="submit">Apply</button>
     </form>
-        
+
+{% elif request.method == 'POST' %}   
+
     <h2>Promedio por provincias</h2>
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
         {{ mean_table | safe }}
@@ -33,5 +36,7 @@
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
         {{ mode_table | safe }}
     </div>
+
+{% endif %}
 
 {% endblock main_body %}
