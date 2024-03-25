@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import pandas as pd
 import numpy as np
-from .models import cpPais, bdoms
+from .models import bdoms
 from django.db.models import Q
 import numpy as np
 from .forms import DateRangeForm, DeliveryTypesForm
@@ -105,56 +105,6 @@ def calculate_days_between_first_and_last_reception(pedcol, datecol):
     
     return result_df, len(mono_piece_purchases), len(results)
 
-def importar_excel_tms(folder_path) -> pd.DataFrame:
-
-    df = pd.read_excel(folder_path)
-    df = df[[
-    'pedido',
-    'flujo',
-    'seller',
-    'sucCodigo',
-    'estadoPedido',
-    'fechaCreacion',
-    'fechaRecepcion',
-    'fechaDespacho',
-    'fechaEntrega',
-    'lpn',
-    'estadoLpn',
-    'trackingDistribucion',
-    'trackingTransporte',
-    'tipo',
-    'codigoPostal',
-    'tte',
-    'tteSucursalDistribucion',
-    'tiendaEntrega',
-    'zona'
-    ]]
-
-    date_columns = ['fechaCreacion', 'fechaRecepcion', 'fechaDespacho', 'fechaEntrega']
-
-    for column in date_columns:
-        df[column] = pd.to_datetime(df[column])
-
-    df['codigoPostal'] = df['codigoPostal'].astype(object)
-
-    for index, row in df.iterrows():
-        cp_value = row['codigoPostal']  # Assuming this is the CP value as a string
-        cp_instance = cpPais.objects.get(CP=cp_value)
-        df.at[index, 'codigoPostal'] = cp_instance
-
-    bdfin = df
-
-    for column in date_columns:
-        print(column)
-        bdfin[column] = pd.to_datetime(bdfin[column])
-
-    bdfin.replace({pd.NaT: None, np.nan: None}, inplace=True)
-    bdfin.replace('nan', None)
-
-    # bdfin = bdfin.rename(columns=lambda x: x.replace('.', 'x'))
-    # print(type(bdfin))
-
-    return bdfin
 
 def calculate_date_diff(first_date_column, last_date_column, seller=None, zona=None, tipo=None, from_date_filter=None, until_date_filter=None):
 
@@ -194,7 +144,7 @@ def mode_group_date_diff(df, grcol, datecol1, datecol2=None):
         mode_per_group = df.groupby(grcol)[datecol1].apply(lambda x: x.mode())
     mode_per_group.reset_index(inplace=True)
     mode_per_group.drop(['level_1'], axis=1, inplace=True)
-    mode_per_group = mode_per_group[mode_per_group['codigoPostal__Provincia'] != 'CAPITAL FEDERAL']
+    # mode_per_group = mode_per_group[mode_per_group['codigoPostal__Provincia'] != 'CAPITAL FEDERAL']
     mode_per_group.sort_values(by=datecol1, inplace=True)
     return mode_per_group
 
@@ -205,7 +155,7 @@ def mean_group_date_diff(df, grcol, datecol1, datecol2=None):
         mean_per_group = df.groupby(grcol)[datecol1].apply(lambda x: x.mean())
     mean_per_group.reset_index(inplace=True)
 
-    mean_per_group = mean_per_group[mean_per_group['codigoPostal__Provincia'] != 'CAPITAL FEDERAL']
+    # mean_per_group = mean_per_group[mean_per_group['codigoPostal__Provincia'] != 'CAPITAL FEDERAL']
 
     # Calculate first quartile for each group
     first_quartile = df.groupby(grcol)[datecol2].quantile(0.25).reset_index()
