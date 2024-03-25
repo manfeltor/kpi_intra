@@ -9,10 +9,11 @@ from registerapp.models import UserProfile
 
 # Create your views here.
 
-def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form):
+def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, until_date_form, zona):
+
     company = user_profile.company
 
-    base_df = calculate_date_diff(first_date_column="fechaDespacho", last_date_column="fechaEntrega", zona="INTERIOR", tipo="DIST", seller=company.nombre, from_date_filter=from_date_form, until_date_filter=until_date_form)
+    base_df = calculate_date_diff(first_date_column="fechaDespacho", last_date_column="fechaEntrega", zona=zona, tipo="DIST", seller=company.nombre, from_date_filter=from_date_form, until_date_filter=until_date_form)
 
     mode_table = mode_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
     html_mode_table = mode_table.to_html(index=False)
@@ -32,16 +33,18 @@ def fetch_entregas_forms_data(form_dates, form_filters):
     interior_checked = form_filters.cleaned_data['INTERIOR']
     # Determine the values for amba_filter and interior_filter based on checkbox values
     if amba_checked and not interior_checked: 
-        amba_filter = True
-        interior_filter = False
-    elif not amba_checked and interior_checked:
-        amba_filter = False
-        interior_filter = True
-    else:
-        amba_filter = False
-        interior_filter = False
+        
+        zona_filter = "AMBA"
 
-    cleaned_data = {"from_date":from_date_form, "to_date":until_date_form, "amba_filter":amba_filter, "interior_filter":interior_filter}
+    elif not amba_checked and interior_checked:
+
+        zona_filter = "INTERIOR"
+
+    else:
+
+        zona_filter = None
+
+    cleaned_data = {"from_date":from_date_form, "to_date":until_date_form, "zona": zona_filter}
 
     return cleaned_data
 
@@ -52,7 +55,7 @@ def render_main_despacho_vs_entrega(request):
         if form_dates.is_valid() and form_filters.is_valid():
             user_profile = UserProfile.objects.get(user=request.user)
             forms_data = fetch_entregas_forms_data(form_dates, form_filters)
-            context = generate_main_despacho_vs_entrega_context(user_profile, forms_data["from_date"], forms_data["to_date"])
+            context = generate_main_despacho_vs_entrega_context(user_profile=user_profile, from_date_form=forms_data["from_date"], until_date_form=forms_data["to_date"], zona=forms_data["zona"])
             context['form'] = form_dates
 
             return render(request, "entregasmain.html", context)
