@@ -6,6 +6,8 @@ from django.db.models import Q
 import numpy as np
 from .forms import DateRangeForm, DeliveryTypesForm
 from registerapp.models import UserProfile
+from .views_graph import simple_bar_plot
+import matplotlib.pyplot as plt
 
 # Create your views here.
 
@@ -16,12 +18,14 @@ def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, unti
     base_df = calculate_date_diff(first_date_column="fechaDespacho", last_date_column="fechaEntrega", zona=zona, tipo="DIST", seller=company.nombre, from_date_filter=from_date_form, until_date_filter=until_date_form)
 
     mode_table = mode_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
+    mode_graph = simple_bar_plot(mode_table,"codigoPostal__Provincia", "bdDate_difference")
+    plt.show()
     html_mode_table = mode_table.to_html(index=False)
 
     mean_table = mean_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
     html_mean_table = mean_table.to_html(index=False)
 
-    context = {'mode_table': html_mode_table, 'mean_table': html_mean_table}
+    context = {'mode_table': html_mode_table, 'mean_table': html_mean_table, 'mode_graph': mode_graph}
     return context
 
 def fetch_entregas_forms_data(form_dates, form_filters):
