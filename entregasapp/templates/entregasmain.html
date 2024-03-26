@@ -36,6 +36,17 @@
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
         {{ mode_table | safe }}
     </div>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <h1>Interactive Bar Plot</h1>
+        <div id="plot"></div>
+
+        <script>
+        // Load the Plotly JSON data
+        var graphJson = JSON.parse('{{ mode_graph|escapejs }}');
+
+        // Render the Plotly chart
+        Plotly.newPlot('plot', graphJson.data, graphJson.layout);
+        </script>
 
 {% endif %}
 
