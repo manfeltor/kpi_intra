@@ -1,7 +1,7 @@
 import plotly.graph_objs as go
 import pandas as pd
 
-def interactive_bar_plot(df, x_column, y_column1, y_column2 = None):
+def interactive_bar_plot(df, x_column, y_column1, graph_title, y_column2 = None):
     # TODO test the func hard coded, then start passing DF
     
     # Specify the x and y values for the traces
@@ -21,7 +21,7 @@ def interactive_bar_plot(df, x_column, y_column1, y_column2 = None):
 
     # Create the Plotly figure
     fig = go.Figure(data=traces)
-    fig.update_layout(title='Interactive Bar Chart with Multiple Y Columns', xaxis_title='X Axis Label', yaxis_title='Y Axis Label', plot_bgcolor='rgba(0,0,0, 0.8)')
+    fig.update_layout(title=graph_title, xaxis_title='X Axis Label', yaxis_title='Y Axis Label', plot_bgcolor='rgba(0,0,0, 0.8)')
 
     # Convert the figure to JSON
     graph_json = fig.to_json()

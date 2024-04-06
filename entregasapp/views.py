@@ -19,12 +19,13 @@ def generate_main_despacho_vs_entrega_context(user_profile, from_date_form, unti
 
     mode_table = mode_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
     html_mode_table = mode_table.to_html(index=False)
-    mode_graph = interactive_bar_plot(df=mode_table, x_column='codigoPostal__Provincia', y_column1='bdDate_difference', y_column2='date_difference')
+    mode_graph = interactive_bar_plot(df=mode_table, x_column='codigoPostal__Provincia', y_column1='bdDate_difference', y_column2='date_difference', graph_title='graph_moda')
 
     mean_table = mean_group_date_diff(base_df, "codigoPostal__Provincia", "date_difference", "bdDate_difference")
     html_mean_table = mean_table.to_html(index=False)
+    mean_graph = interactive_bar_plot(df=mean_table, x_column='codigoPostal__Provincia', y_column1='bdDate_difference', y_column2='date_difference', graph_title='graph_media')
 
-    context = {'mode_table': html_mode_table, 'mode_graph': mode_graph, 'mean_table': html_mean_table}
+    context = {'mode_table': html_mode_table, 'mode_graph': mode_graph, 'mean_table': html_mean_table, 'mean_graph': mean_graph}
     return context
 
 def fetch_entregas_forms_data(form_dates, form_filters):

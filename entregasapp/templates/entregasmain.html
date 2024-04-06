@@ -31,6 +31,17 @@
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
         {{ mean_table | safe }}
     </div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <h1>Interactive Bar Plot</h1>
+        <div id="plot1"></div>
+
+        <script>
+        // Load the Plotly JSON data
+        var graphJson = JSON.parse('{{ mean_graph|escapejs }}');
+
+        // Render the Plotly chart
+        Plotly.newPlot('plot1', graphJson.data, graphJson.layout);
+        </script>
 
     <h2>Moda por provincias</h2>
     <div class="table-styled table-container" data-aos="fade-right" data-aos-delay="100">
@@ -38,14 +49,14 @@
     </div>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <h1>Interactive Bar Plot</h1>
-        <div id="plot"></div>
+        <div id="plot2"></div>
 
         <script>
         // Load the Plotly JSON data
         var graphJson = JSON.parse('{{ mode_graph|escapejs }}');
 
         // Render the Plotly chart
-        Plotly.newPlot('plot', graphJson.data, graphJson.layout);
+        Plotly.newPlot('plot2', graphJson.data, graphJson.layout);
         </script>
 
 {% endif %}
