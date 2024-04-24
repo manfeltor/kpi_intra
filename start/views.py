@@ -5,7 +5,14 @@ from django.shortcuts import render
 
 def base(req):
 
-    return render(req, "landing.html")
+    if req.user.groups.filter(name='management').exists():
+
+        return render(req, "landing_management.html")
+    
+    else:
+        
+        return render(req, "landing.html")
+
 
 def construccion(req):
     
