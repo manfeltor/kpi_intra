@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'start',
     'registerapp',
     'entregasapp',
+    'gerenciaapp',
 ]
 
 MIDDLEWARE = [
