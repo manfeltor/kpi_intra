@@ -2,3 +2,5 @@ C:/Users/ftorres/OneDrive[[:space:]]-[[:space:]]INTRALOG[[:space:]]ARGENTINA[[:s
 path/to/your_database.db filter=lfs diff=lfs merge=lfs -text
 db.sqlite3 filter=lfs diff=lfs merge=lfs -text
 *.sqlite3 filter=lfs diff=lfs merge=lfs -text
+merged.xlsx filter=lfs diff=lfs merge=lfs -text
+baseRaw/mergedraw.xlsx filter=lfs diff=lfs merge=lfs -text
