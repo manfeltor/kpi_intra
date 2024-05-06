@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         
-        excel_data = importar_excel_tms(r'mrgd.xlsx')
+        excel_data = importar_excel_tms(r'C:\Users\ftorres\OneDrive - INTRALOG ARGENTINA S.A\kpi\braw\mrgd.xlsx')
 
         for index, row in excel_data.iterrows():
             try:
