@@ -121,8 +121,6 @@ def calculate_date_diff(first_date_column, last_date_column, seller=None, zona=N
             filter_conditions &= Q(fechaDespacho__gte=from_date_filter, fechaDespacho__lte=until_date_filter)
 
         query_result = bdoms.objects.filter(filter_conditions).values(first_date_column, last_date_column, 'codigoPostal__Provincia')
-        columns1 = query_result.keys()  # Retrieve the keys (columns) of the dictionary
-        print(columns1)
         df = pd.DataFrame.from_records(query_result)
         df = df.dropna()
         df['date_difference'] = (df[last_date_column] - df[first_date_column]).dt.days
