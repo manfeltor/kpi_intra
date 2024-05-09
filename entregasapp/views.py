@@ -187,6 +187,8 @@ def mean_group_date_diff(df, grcol, datecol1, datecol2=None):
 
 
 def importar_excel_tms(folder_path) -> pd.DataFrame:
+    import pandas as pd
+
     df = pd.read_excel(folder_path)
     df = df[[
         'pedido', 'flujo', 'seller', 'sucCodigo', 'estadoPedido', 'fechaCreacion',
@@ -197,13 +199,12 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
     ]]
     date_columns = ['fechaCreacion', 'fechaRecepcion', 'fechaDespacho', 'fechaEntrega']
     df[date_columns] = df[date_columns].apply(pd.to_datetime)
-    df['codigoPostal'] = df['codigoPostal'].astype(str)  # Ensuring it's a string for comparisons
 
     # Caching the cpPais objects to reduce database queries
     cp_cache = {
-        'CP': {cp.CP: cp.CP for cp in cpPais.objects.all()},
-        'Localidad': {cp.Localidad: cp.CP for cp in cpPais.objects.all()},
-        'Provincia': {cp.Provincia: cp.CP for cp in cpPais.objects.all()}
+        'CP': {cp.CP: cp for cp in cpPais.objects.all()},
+        'Localidad': {cp.Localidad: cp for cp in cpPais.objects.all()},
+        'Provincia': {cp.Provincia: cp for cp in cpPais.objects.all()}
     }
 
     for index, row in df.iterrows():
@@ -213,14 +214,14 @@ def importar_excel_tms(folder_path) -> pd.DataFrame:
             cp_cache['Localidad'].get(row['localidad'],
             cp_cache['Provincia'].get(row['provincia'], '9999')))
         )
-
+        
         df.at[index, 'codigoPostal'] = cp_instance
-    
+
     df.replace({pd.NaT: None, np.nan: None}, inplace=True)
     df.replace('nan', None)
 
     # Excluding unwanted columns
     columns_to_exclude = ['provincia', 'localidad']
     df = df[[col for col in df.columns if col not in columns_to_exclude]]
-    
+
     return df
